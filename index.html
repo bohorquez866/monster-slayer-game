@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Basics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1>Monster Slayer</h1>
+    </header>
+    <div id="game">
+        <section>
+            <h2>Round: {{currentRound}}</h2>
+        </section>
+        <section id="monster" class="container">
+            <h2>Monster Health</h2>
+            <div class="healthbar">
+                <div class="healthbar__value" :style="monsterHealthBar"></div>
+            </div>
+        </section>
+
+        <section id="player" class="container">
+            <h2>Your Health</h2>
+            <div class="healthbar">
+                <div class="healthbar__value" :style="playerHealthBar"></div>
+            </div>
+        </section>
+        <section class="container" v-if="winner">
+            <h2>Game Over, Bitch</h2>
+            <h2 v-if="winner === 'won' ">You Won!</h2>
+            <h2 v-else-if="winner === 'lost'">Monster Won!</h2>
+            <h2 v-else-if="winner === 'draw'">It's a draw!</h2>
+            <h2 v-else-if="winner === 'surrender'">You surrendered, pussy, go to cry to mama</h2>
+            <button @click="restartGame">Start new Game</button>
+        </section>
+        <section id="controls" v-else>
+            <button @click="attackMonster">ATTACK</button>
+            <button :disabled="specialAttackRound" @click="specialAttackMonster">SPECIAL ATTACK</button>
+            <button @click="healPlayer">HEAL</button>
+            <button @click="surrender">SURRENDER</button>
+        </section>
+
+        <section id="log" class="container">
+            <h2>Battle Log</h2>
+            <ul>
+                <li v-for="log in logMessages" :key="log">
+                    <p>
+                        <strong :class="{'log--player': log.actionWho === 'Player', 'log--monster': log.actionWho === 'Monster'}">
+                            {{log.actionWho == 'Player'? 'Player': 'monster'}} &nbsp;
+                        </strong>
+                        <span v-if="log.actionAction === 'heal'">
+                            Heals Himself For <strong class="log--heal">{{log.actionValue}} HP</strong>
+                        </span>
+                        <span v-else-if="log.actionAction === 'attack'">attacks <strong class="log--damage">
+                                {{log.actionValue}} HP</strong>
+                        </span>
+                        <span v-else-if="log.actionAction === 'sp-attack'">
+                            used Special attack for <strong class="log--damage">{{log.actionValue}} HP</strong>
+                        </span>
+                    </p>
+
+
+                </li>
+            </ul>
+        </section>
+
+    </div>
+</body>
+
+</html>
